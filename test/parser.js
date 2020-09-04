@@ -29,13 +29,19 @@ describe('toJSON', () => {
       'return 301 https://$host$request_uri;',
       '}',
       'server_name example.example.com;',
+      '}',
+      'types {',
+      'video/iso.segment m4s;',
       '}'].join('\n')
-    parser.toJSON(configString).should.deep.equal({server: {
-      'if ($host = example.example.com)': {
-        'return': '301 https://$host$request_uri'
+    parser.toJSON(configString).should.deep.equal({
+      server: {
+        'if ($host = example.example.com)': {
+          'return': '301 https://$host$request_uri'
+        },
+        'server_name': 'example.example.com'
       },
-      'server_name': 'example.example.com'
-    }})
+      types: {'video/iso.segment': 'm4s'},
+    })
   })
 
   it('should support nested directives', () => {
