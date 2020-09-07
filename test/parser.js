@@ -102,6 +102,32 @@ describe('toConf', () => {
     result.should.contain('server {')
     result.should.contain('}')
   })
+
+  it('should store all values for same-named directives', () => {
+    const json = {http: {
+      server: {
+        listen: [
+          '8080',
+          '8081',
+        ]
+      }
+    }}
+    const result = parser.toConf(json);
+    result.should.contain("8080");
+  })
+
+  it('converts nested objs to config blocks', () => {
+    // test multiple server objects
+    const json = {http: {
+      server: [{
+        listen: 8080,
+      }, {
+        listen: 8081,
+      }],
+    }};
+    const result = parser.toConf(json);
+    result.should.contain("8080");
+  });
 })
 
 describe('parse', () => {
